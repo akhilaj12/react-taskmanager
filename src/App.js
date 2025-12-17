@@ -1,24 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter as Router, NavLink } from "react-router-dom";
+import { AuthProvider } from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { AppRoutes } from './routes/Router';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  const { token,logout } = useAuth();
+
+  return(
+    <Router>
+      <nav style={{ display: 'flex', gap: '25px', padding: '10px', background: '#282c34', color: 'white' }}>
+        <NavLink to="/" style={({isActive}) => ({ color: isActive ? 'yellow' : 'white', textDecoration: 'none', fontWeight: isActive ? 'bold' : 'normal' })}>Home</NavLink>
+        {token && <NavLink to="/tasks" style={({isActive}) => ({ color: isActive ? 'yellow' : 'white', textDecoration: 'none', fontWeight: isActive ? 'bold' : 'normal' })}>Tasks</NavLink>}
+        {token && <NavLink to="/about" style={({isActive}) => ({ color: isActive ? 'yellow' : 'white', textDecoration: 'none', fontWeight: isActive ? 'bold' : 'normal' })}>About</NavLink>}
+        {token && <NavLink to="/" onClick={logout} style={{ color: 'white', textDecoration: 'none', fontWeight: 'normal' }}>Logout</NavLink>}
+      </nav>
+      <ToastContainer />
+      <AppRoutes />
+    </Router>
   );
 }
 
