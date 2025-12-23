@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import API from './API';
 import Swal from "sweetalert2";
 import './cssStyling/AuthStyling.css';

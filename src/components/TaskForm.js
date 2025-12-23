@@ -7,21 +7,23 @@ export default function TaskForm(){
     const [title,setTitle] = useState('');
     const [description,setDescription] = useState('');
 
-    const handleSubmit = (e) =>{
+    const handleSubmit = async (e) =>{
         e.preventDefault();
     
         if(!title?.trim()){
             Swal.fire({
                 icon: 'warning',
                 title: 'Invalid title!',
-                text: 'Please enter the title';
+                text: 'Please enter the title'
             });
             return;
         }
         const newTask = {title, description};
         try{
             console.log("Creating task:", newTask);
-            API.post(`/tasks`, newTask);
+            console.log("API baseURL:", API.defaults.baseURL);
+            const response = await API.post(`/tasks`, newTask);
+            console.log("Task created successfully:", response.data);
             setTitle("");
             setDescription("")
             Swal.fire({
@@ -31,10 +33,22 @@ export default function TaskForm(){
                     timer: 3000
                 });
         }
-        catch((error) => {
+        catch(error) {
             console.error('Error creating task:', error);
-            Swal.fire({ icon: 'error', title: 'Create failed', text: 'Could not create task. Try again.' });
-        });
+            console.error('Error code:', error.code);
+            console.error('Error message:', error.message);
+            if (error.response) {
+                console.error('Response status:', error.response.status);
+                console.error('Response data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received. Request:', error.request);
+            }
+            Swal.fire({ 
+                icon: 'error', 
+                title: 'Create failed', 
+                text: error.message || 'Could not create task. Try again.' 
+            });
+        }
 
     }
 
