@@ -1,4 +1,3 @@
-import TaskList from "../components/TaskList";
 import TaskBoard from "../components/TaskBoard";
 import { useEffect, useState } from "react";
 import API from "../components/API";

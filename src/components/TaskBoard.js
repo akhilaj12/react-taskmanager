@@ -1,47 +1,105 @@
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
+const STATUSES = [
+  { id: "TO_DO", title: "To Do" },
+  { id: "IN_PROGRESS", title: "In Progress" },
+  { id: "COMPLETED", title: "Done" }
+];
+
 export default function TaskBoard({ tasks, setTasks }) {
 
-    const onDragEnd = (result) => {
-        if (!result.destination) return;
+ const columns = STATUSES.reduce((acc, status) => {
+  acc[status.id] = {
+    ...status,
+    tasks: tasks.filter(
+      task => (task.status ?? "TO_DO") === status.id
+    )
+  };
+  return acc;
+}, {});
 
-        const { source, destination } = result;
 
-        const reordered = Array.from(tasks);
-        const [removed] = reordered.splice(result.source.index, 1)
-        reordered.splice(result.destination.index, 0, removed)
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+    if (!destination) return;
 
-        setTasks(reordered)
-    };
+    const sourceStatus = source.droppableId;
+    const destStatus = destination.droppableId;
 
-    return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="tasks">
-                {(provided) => (
-                    <div ref={provided.innerRef} {...provided.droppableProps}
-                        style={{
-                            margin: 8,
-                            padding: 8,
-                            width: 250,
-                            backgroundColor: '#f0f0f0',
-                            minHeight: 500,
-                            display: "inline-block",
-                            verticalAlign: "top"
-                        }}>
-                        {tasks.map((task, index) => (
-                            <Draggable key={task.id} draggableId={String(task.id)} index={index}>
-                                {(provided) => (
-                                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}
-                                        className="p-2 m-2 border rounded bg-white" >
-                                        {task.title}
-                                    </div>
-                                )}
-                            </Draggable>
-                        ))}
-                        {provided.placeholder}
-                    </div>
-                )}
-            </Droppable>
-        </DragDropContext>
+    const sourceTasks = Array.from(
+      tasks.filter(t => t.status === sourceStatus)
     );
+    const destTasks = Array.from(
+      tasks.filter(t => t.status === destStatus)
+    );
+
+    const [movedTask] = sourceTasks.splice(source.index, 1);
+
+    // Update status if moved across columns
+    if (sourceStatus !== destStatus) {
+      movedTask.status = destStatus;
+    }
+
+    destTasks.splice(destination.index, 0, movedTask);
+
+    // Rebuild flat tasks array
+    const updatedTasks = tasks.map(task =>
+      task.id === movedTask.id ? movedTask : task
+    );
+
+    setTasks(updatedTasks);
+  };
+
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div style={{ display: "flex", gap: 16 }}>
+        {STATUSES.map((col) => (
+          <Droppable key={col.id} droppableId={col.id}>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={{
+                  width: 260,
+                  minHeight: 400,
+                  padding: 8,
+                  background: "#f4f5f7",
+                  borderRadius: 6
+                }}
+              >
+                <h5>{col.title}</h5>
+
+                {columns[col.id].tasks.map((task, index) => (
+                  <Draggable
+                    key={task.id}
+                    draggableId={String(task.id)}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          ...provided.draggableProps.style,
+                          padding: 10,
+                          marginBottom: 8,
+                          background: snapshot.isDragging ? "#e3f2fd" : "#fff",
+                          borderRadius: 4
+                        }}
+                      >
+                        {task.title}
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        ))}
+      </div>
+    </DragDropContext>
+  );
 }
