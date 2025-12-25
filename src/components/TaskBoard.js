@@ -20,35 +20,20 @@ export default function TaskBoard({ tasks, setTasks }) {
 
 
   const onDragEnd = (result) => {
-    const { source, destination } = result;
-    if (!destination) return;
+  const { source, destination, draggableId } = result;
+  if (!destination) return;
 
-    const sourceStatus = source.droppableId;
-    const destStatus = destination.droppableId;
+  if (source.droppableId === destination.droppableId) return;
 
-    const sourceTasks = Array.from(
-      tasks.filter(t => t.status === sourceStatus)
-    );
-    const destTasks = Array.from(
-      tasks.filter(t => t.status === destStatus)
-    );
+  setTasks(prev =>
+    prev.map(task =>
+      task.id === Number(draggableId)
+        ? { ...task, status: destination.droppableId }
+        : task
+    )
+  );
+};
 
-    const [movedTask] = sourceTasks.splice(source.index, 1);
-
-    // Update status if moved across columns
-    if (sourceStatus !== destStatus) {
-      movedTask.status = destStatus;
-    }
-
-    destTasks.splice(destination.index, 0, movedTask);
-
-    // Rebuild flat tasks array
-    const updatedTasks = tasks.map(task =>
-      task.id === movedTask.id ? movedTask : task
-    );
-
-    setTasks(updatedTasks);
-  };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
