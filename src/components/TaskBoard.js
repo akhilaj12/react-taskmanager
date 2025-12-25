@@ -1,4 +1,5 @@
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import API from "./API";
 
 const STATUS_COLORS = {
   TO_DO: {
@@ -33,19 +34,37 @@ export default function TaskBoard({ tasks, setTasks }) {
     return acc;
   }, {});
 
-  const onDragEnd = (result) => {
+  const onDragEnd = async (result) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
 
     if (source.droppableId === destination.droppableId) return;
 
+    const taskId = Number(draggableId);
+  const newStatus = destination.droppableId;
+
+  const previousTasks = tasks;
+
+
     setTasks(prev =>
-      prev.map(task =>
-        task.id === Number(draggableId)
-          ? { ...task, status: destination.droppableId }
-          : task
-      )
-    );
+    prev.map(task =>
+      task.id === taskId
+        ? { ...task, status: newStatus }
+        : task
+    )
+  );
+
+    try {
+    await API.patch(`/tasks/${taskId}/status`, JSON.stringify(newStatus), {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+  } catch (error) {
+    console.error("❌ Failed to update task status", error);
+    setTasks(previousTasks);
+    alert("Failed to update task status. Please try again.");
+  }
   };
 
   return (
