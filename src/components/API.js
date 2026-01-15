@@ -12,8 +12,10 @@ API.interceptors.request.use(config => {
     console.log('Request to:', config.baseURL + config.url);
     console.log('Token present:', !!token);
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
+    config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
+  }
     return config;
 })
 
