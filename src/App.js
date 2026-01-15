@@ -1,6 +1,5 @@
 import './App.css';
 import {BrowserRouter as Router, NavLink } from "react-router-dom";
-import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/AuthContext';
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
