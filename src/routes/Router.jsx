@@ -6,7 +6,6 @@ import LoginForm from '../components/LoginForm';
 import SignUpForm from '../components/SignUpForm';
 import TaskForm from '../components/TaskForm';
 import ProtectedRoute from '../pages/ProtectedRoute';
-import TaskDetail from '../pages/TaskDetail';
 
 export function AppRoutes() {
     return (
@@ -19,7 +18,6 @@ export function AppRoutes() {
             {/* Protected Routes */}
             <Route element={<ProtectedRoute />}>
                 <Route path='/tasks' element={<Tasks />} />
-                <Route path='/tasks/:taskId' element={<TaskDetail />} />
                 <Route path='/about' element={<About />} />
                 <Route path='/taskform' element={<TaskForm />} />
             </Route>
