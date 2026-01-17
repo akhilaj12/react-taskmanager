@@ -1,5 +1,6 @@
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import API from "./API";
+import { useNavigate } from "react-router-dom";
 
 const STATUS_COLORS = {
     TO_DO: {
@@ -23,7 +24,7 @@ const STATUSES = [
 ];
 
 export default function TaskBoard({ tasks, setTasks }) {
-
+    const navigate = useNavigate();
     const columns = STATUSES.reduce((acc, status) => {
         acc[status.id] = {
             ...status,
@@ -132,7 +133,7 @@ export default function TaskBoard({ tasks, setTasks }) {
                                                             cursor: "grab"
                                                         }}
                                                     >
-                                                        <p style={{ margin: 0, fontWeight: "bold", fontSize: 14 }}>
+                                                        <p style={{ margin: 0, fontWeight: "bold", fontSize: 14, cursor: "pointer" }} onClick={() => {navigate(`/tasks/${task.id}`)}}>
                                                             {task.title}
                                                         </p>
                                                         {task.description && (
