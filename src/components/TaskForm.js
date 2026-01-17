@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 export default function TaskForm(){
     const [title,setTitle] = useState('');
     const [description,setDescription] = useState('');
+    const [priority, setPriority] = useState('LOW');
+    const [dueDate, setDueDate] = useState('');
 
     const handleSubmit = async (e) =>{
         e.preventDefault();
@@ -18,7 +20,7 @@ export default function TaskForm(){
             });
             return;
         }
-        const newTask = {title, description};
+        const newTask = {title, description, priority, dueDate};
         try{
             console.log("Creating task:", newTask);
             console.log("API baseURL:", API.defaults.baseURL);
@@ -26,6 +28,8 @@ export default function TaskForm(){
             console.log("Task created successfully:", response.data);
             setTitle("");
             setDescription("")
+            setPriority("LOW");
+            setDueDate("");
             Swal.fire({
                     title: "Created task for you!",
                     text: `${title} - ${description} added!`,
@@ -71,6 +75,22 @@ export default function TaskForm(){
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                         required
+                    />
+                    <select
+                        className="form-control auth-input"
+                        value={priority}
+                        onChange={e => setPriority(e.target.value)}
+                    >
+                        <option value="LOW">Low Priority</option>
+                        <option value="MEDIUM">Medium Priority</option>
+                        <option value="HIGH">High Priority</option>
+                    </select>
+                    <input
+                        type="date"
+                        className="form-control auth-input"
+                        placeholder="Due Date"
+                        value={dueDate}
+                        onChange={e => setDueDate(e.target.value)}
                     />
                     <button className="btn auth-btn w-100" type="submit">Add Task</button>
                 </form>
