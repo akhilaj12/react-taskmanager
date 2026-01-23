@@ -75,21 +75,14 @@ export default function TaskBoard({ tasks, setTasks }) {
 
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <div style={{ display: "flex", gap: 16, overflowX: "auto", padding: 16 }}>
+            <div className="flex gap-4 overflow-x-auto p-4">
                 {STATUSES.map((col) => (
                     <div
                         key={col.id}
-                        style={{
-                            width: 260,
-                            minHeight: 400,
-                            padding: 8,
-                            background: "#f4f5f7",
-                            borderRadius: 6,
-                            flex: "0 0 auto"
-                        }}
+                        className="w-64 bg-gray-100 rounded-xl p-3 shadow-sm"
                     >
                         {/* Column header */}
-                        <h5 style={{ marginBottom: 8, fontWeight: "bold" }}>
+                        <h5 className="font-bold text-gray-700 mb-2">
                             {col.title} ({columns[col.id].tasks.length})
                         </h5>
 
@@ -138,12 +131,16 @@ export default function TaskBoard({ tasks, setTasks }) {
                                                             cursor: "grab"
                                                         }}
                                                     >
-                                                        <p style={{ margin: 0, fontWeight: "bold", fontSize: 14, cursor: "pointer", ...(task.status == "COMPLETED" ? completedStyle : {})}} onClick={() => {navigate(`/tasks/${task.id}`)}}>
+                                                        <p className={`font-semibold text-sm 
+  ${task.status === "COMPLETED" ? "line-through text-gray-500" : ""}`}>
+
                                                             {task.title}
                                                         </p>
                                                         {task.description && (
-                                                            <p style={{ margin: "4px 0 0 0", fontSize: 12, color: "#666", ...(task.status == "COMPLETED" ? completedStyle : {}) }}>
-                                                                {task.description}
+<p
+  className={`text-xs mt-1
+  ${task.status === "COMPLETED" ? "line-through text-gray-400" : "text-gray-600"}`}
+>                                                                {task.description}
                                                             </p>
                                                         )}
                                                     </div>
