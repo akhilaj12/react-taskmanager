@@ -17,6 +17,11 @@ const STATUS_COLORS = {
     }
 };
 
+const completedStyle = {
+    textDecoration: "line-through",
+    opacity: 0.8
+};
+
 const STATUSES = [
     { id: "TO_DO", title: "To Do" },
     { id: "IN_PROGRESS", title: "In Progress" },
@@ -133,11 +138,11 @@ export default function TaskBoard({ tasks, setTasks }) {
                                                             cursor: "grab"
                                                         }}
                                                     >
-                                                        <p style={{ margin: 0, fontWeight: "bold", fontSize: 14, cursor: "pointer" }} onClick={() => {navigate(`/tasks/${task.id}`)}}>
+                                                        <p style={{ margin: 0, fontWeight: "bold", fontSize: 14, cursor: "pointer", ...(task.status == "COMPLETED" ? completedStyle : {})}} onClick={() => {navigate(`/tasks/${task.id}`)}}>
                                                             {task.title}
                                                         </p>
                                                         {task.description && (
-                                                            <p style={{ margin: "4px 0 0 0", fontSize: 12, color: "#666" }}>
+                                                            <p style={{ margin: "4px 0 0 0", fontSize: 12, color: "#666", ...(task.status == "COMPLETED" ? completedStyle : {}) }}>
                                                                 {task.description}
                                                             </p>
                                                         )}
