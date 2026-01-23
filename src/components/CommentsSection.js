@@ -43,28 +43,23 @@ export default function CommentsSection({ taskId }) {
   const safeComments = Array.isArray(comments) ? comments : [];
 
   return (
-    <div className="mt-4">
-      <h4>Comments</h4>
+    <div className="mt-6">
+  <h4 className="font-semibold text-lg mb-3">Comments</h4>
 
-      {safeComments.length === 0 && (
-        <p className="text-muted">No comments yet.</p>
-      )}
+  <ul className="space-y-2">
+    {comments.map(c => (
+      <li className="bg-gray-50 p-3 rounded-md">
+        <p className="text-sm">{c.content}</p>
+        <span className="text-xs text-gray-400">
+          {new Date(c.createdAt).toLocaleString()}
+        </span>
+      </li>
+    ))}
+  </ul>
 
-      <ul className="list-group mb-3">
-        {safeComments.map((comment) => (
-          <li key={comment.id} className="list-group-item">
-            <p className="mb-1">{comment.content}</p>
-            <small className="text-muted">
-              {comment.createdAt
-                ? new Date(comment.createdAt).toLocaleString()
-                : "Just now"}
-            </small>
-          </li>
-        ))}
-      </ul>
 
       <textarea
-        className="form-control mb-2"
+        className="w-full mt-3 p-2 border rounded-md focus:ring-2 focus:ring-blue-400"
         placeholder="Add a comment..."
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
