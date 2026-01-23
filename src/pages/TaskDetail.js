@@ -30,16 +30,18 @@ export default function TaskDetail(){
     }
 
     return(
-        <div className="container mt-4">
+        <div className="max-w-3xl mx-auto p-6">
             <button className="btn btn-secondary mb-3" onClick={() => navigate(-1)}>Back to Tasks</button>
-            <div className="card">
+            <div className="bg-white rounded-xl shadow-md p-6">
                 <div className="card-header">
                     <h3>{task.title}</h3>
                 </div>
                 <div className="card-body">
                     <p><strong>Description:</strong> {task.description || "No description provided."}</p>
                     <p><strong>Status:</strong> {task.status}</p>
-                    <p><strong>Priority:</strong> {task.priority}</p>
+                    <p className="text-sm text-gray-500">Priority</p>
+<p className="font-medium">{task.priority}</p>
+
                     <p><strong>Due Date:</strong> {task.dueDate || "No due date"}</p>
                 </div>
                 <hr className="my-4" />

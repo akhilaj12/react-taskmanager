@@ -131,8 +131,8 @@ export default function TaskBoard({ tasks, setTasks }) {
                                                             cursor: "grab"
                                                         }}
                                                     >
-                                                        <p className={`font-semibold text-sm 
-  ${task.status === "COMPLETED" ? "line-through text-gray-500" : ""}`}>
+                                                        <p className={`font-semibold cursor-pointer text-sm 
+  ${task.status === "COMPLETED" ? "line-through text-gray-500" : ""}`} onClick={() => {navigate(`/tasks/${task.id}`)}}>
 
                                                             {task.title}
                                                         </p>
